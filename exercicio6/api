@@ -1,0 +1,36 @@
+import requests # type: ignore
+
+# URL da API
+URL = "https://randomuser.me/api/"
+
+def gerar_usuario():
+    """
+    Faz uma requisição à API Random User Generator para obter um perfil de usuário aleatório.
+    
+    Retorno:
+    Nome, e-mail e país do usuário gerado.
+    """
+    try:
+        resposta = requests.get(URL)
+        resposta.raise_for_status()  # Verifica se a requisição foi bem-sucedida
+
+        dados = resposta.json()
+        usuario = dados.get("results", [{}])[0]  # Obtém os dados do primeiro usuário gerado
+
+        nome = f'{usuario.get("name", {}).get("first", "N/A")} {usuario.get("name", {}).get("last", "N/A")}'
+        email = usuario.get("email", "N/A")
+        pais = usuario.get("location", {}).get("country", "N/A")
+
+        print("\nPerfil gerado:")
+        print(f"📌 Nome: {nome}")
+        print(f"📌 E-mail: {email}")
+        print(f"📌 País: {pais}")
+
+    except requests.exceptions.RequestException as e:
+        print(f"Erro ao obter os dados da API: {e}")
+
+# Executa a função
+
+gerar_usuario()
+
+
